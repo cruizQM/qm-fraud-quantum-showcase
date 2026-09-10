@@ -5,7 +5,7 @@ Public repository backing the Quantum Mads Phase 1 concept proposal for the HSBC
 
 ## Current status and open questions
 - Filled to back every proposal claim (2026-09-09); all experiments rerun after the float32 binning fix, three-seed fine-tuning added (2026-09-10).
-- Honest limits (README): all results use the disclosed 8-feature samples; the one-step merge cannot reach a 29-feature production model (~500 GB) and the hierarchical merge is validated on the 2,052-leaf model only; circuit results are local-simulator only, the warm start helps on 1 of 3 seeds, the tree-topology circuit is a single seed.
+- Honest limits (README): all results use the disclosed 8-feature samples; the one-step merge cannot reach a 29-feature production model (~500 GB) and the hierarchical merge is validated on the 2,052-leaf model only; circuit results are local-simulator only, over three seeds; the chain warm start helps on 1 of 3 seeds.
 
 ## How to run
 ```bash
@@ -27,7 +27,7 @@ Each script writes a JSON table to `results/tables/`; committed tables regenerat
 - Hierarchical merge: identical AUPRC to the one-step merge on the 2,052-leaf model with 28x less core memory.
 - KernelSHAP instability grows with feature count (6% at 8 features vs 47% at 29); TT attribution is exact and deterministic.
 - Missing fields: +0.025/+0.065/+0.087/+0.159 AUPRC at 10/20/30/50% missing.
-- Circuit (3 seeds, chain, 8 qubits): warm start helps on 1 of 3 seeds (0.813 → 0.907 on seed 0; none on seeds 1–2); mean 0.842 ± 0.054 vs 0.815 ± 0.031 from scratch; tree topology 0.924 at depth 10 vs 22.
+- Circuit (8 qubits, 3 seeds, XGBoost 0.907): copying the TT into the tree circuit (depth 10 vs 22 for the chain) gives 0.881 ± 0.018 (logit corr. with the teacher 0.89), the best and most consistent circuit; from scratch, chain 0.815 ± 0.031 and tree 0.855 ± 0.051 (0.924 on seed 0 only). The chain copies the teacher only partly (corr. 0.75); its warm start helps on 1 of 3 seeds (0.842 ± 0.054 after fine-tuning).
 
 ## Conventions
 - Python via **uv**; `tensorkrowch==1.1.6` pinned.
