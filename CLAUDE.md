@@ -1,7 +1,7 @@
 # CLAUDE.md — qm-fraud-quantum-showcase (local dir: tn-fraud-quantum-showcase)
 
 ## Purpose
-Public repository backing the Quantum Mads Phase 1 concept proposal for the HSBC problem statement of the 2026 Global Quantum + AI Challenge. A trained tree ensemble is exactly a tensor network: binning each feature at the ensemble's own split thresholds turns the leaf sum into a tensor-train. The TT is then compressed (SVD), used as a deployable scorer (latency, exact attribution, exact missing-field handling, boundary sensitivity, entanglement-entropy interpretability) and as a teacher for a small quantum circuit. Package name: `qdistill`.
+Public repository backing the Quantum Mads Phase 1 concept proposal for the HSBC problem statement of the 2026 Global Quantum + AI Challenge. A trained tree ensemble is exactly a tensor network: binning each feature at the ensemble's own split thresholds turns the leaf sum into a tensor-train. The TT is then compressed (SVD) and used as an exact explainer of the ensemble's decisions (exact attribution, exact missing-field handling, boundary sensitivity, entanglement-entropy interpretability), as a fast scorer where a compact model is enough, and as a teacher for a small quantum circuit. Package name: `qdistill`.
 
 ## Current status and open questions
 - Filled to back every proposal claim (2026-09-09); all experiments rerun after the float32 binning fix, three-seed fine-tuning added (2026-09-10).
