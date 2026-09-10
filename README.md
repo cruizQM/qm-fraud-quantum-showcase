@@ -1,4 +1,4 @@
-# Exact tensor-network distillation for explainable, low-latency card-fraud detection
+# Exact tensor-network distillation for explainable card-fraud detection
 
 Public repository for the HSBC problem statement of the **2026 Global Quantum + AI
 Challenge** (Phase 1 concept proposal, team Quantum Mads). It contains the code,

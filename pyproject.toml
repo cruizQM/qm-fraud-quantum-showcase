@@ -1,7 +1,7 @@
 [project]
 name = "qdistill"
 version = "0.1.0"
-description = "Exact tensor-network distillation of trained tree ensembles for explainable, low-latency card-fraud detection, and its use as a teacher for a small quantum circuit (Amazon Braket / PennyLane) -- public repository for the HSBC problem statement of the 2026 Global Quantum + AI Challenge, Phase 1."
+description = "Exact tensor-network distillation of trained tree ensembles for explainable card-fraud detection, and its use as a teacher for a small quantum circuit (Amazon Braket / PennyLane) -- public repository for the HSBC problem statement of the 2026 Global Quantum + AI Challenge, Phase 1."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
