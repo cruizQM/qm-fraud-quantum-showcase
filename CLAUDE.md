@@ -27,7 +27,7 @@ Each script writes a JSON table to `results/tables/`; committed tables regenerat
 - Hierarchical merge: identical AUPRC to the one-step merge on the 2,052-leaf model with 28x less core memory.
 - KernelSHAP instability grows with feature count (6% at 8 features vs 47% at 29); TT attribution is exact and deterministic.
 - Missing fields: +0.025/+0.065/+0.087/+0.159 AUPRC at 10/20/30/50% missing.
-- Circuit (3 seeds, chain, 8 qubits): warm start helps on 1 of 3 seeds (0.813 → 0.907 on seed 0; none on seeds 1–2); mean 0.843 ± 0.054 vs 0.815 ± 0.031 from scratch; tree topology 0.924 at depth 10 vs 22.
+- Circuit (3 seeds, chain, 8 qubits): warm start helps on 1 of 3 seeds (0.813 → 0.907 on seed 0; none on seeds 1–2); mean 0.842 ± 0.054 vs 0.815 ± 0.031 from scratch; tree topology 0.924 at depth 10 vs 22.
 
 ## Conventions
 - Python via **uv**; `tensorkrowch==1.1.6` pinned.

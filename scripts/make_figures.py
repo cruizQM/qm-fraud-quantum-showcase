@@ -1,8 +1,8 @@
 """Regenerates the results figure from the committed JSON tables, without
 re-running any experiment: (a) compression curve from
-results/tables/distillation_compression.json, (b) latency from
-results/tables/latency_multiseed.json, (c) circuit results from
-results/tables/circuit_distillation.json and circuit_topologies.json.
+results/tables/distillation_compression.json, (b) compiled latency from
+results/tables/latency_compiled.json, (c) circuit results over three seeds from
+results/tables/circuit_distillation{,_seed1,_seed2}.json.
 
 Usage:
     uv run python scripts/make_figures.py
@@ -44,34 +44,35 @@ def main() -> None:
     ax.set_xlabel("Bond dimension"); ax.set_ylabel("Test AUPRC"); ax.set_title("(a) Compression curve")
     ax.legend(frameon=False, fontsize=7, loc="lower right")
 
-    lat = load("latency_multiseed.json")
+    lat = load("latency_compiled.json")
     ax = axes[1]
     if lat:
         agg = lat["aggregated"]
         batch = sorted(int(b) for b in agg)
-        for key, label, color, marker in (("xgboost_ms", "XGBoost", "#1f77b4", "o"),
-                                          ("chain_tt_gather_ms", "Tensor-train", "#2ca02c", "s")):
+        for key, label, color, marker in (("xgboost", "XGBoost", "#1f77b4", "o"),
+                                          ("xgboost_onnx", "XGBoost (ONNX Runtime)", "#17becf", "D"),
+                                          ("tt_numba", "Tensor-train (Numba)", "#2ca02c", "s")):
             m = [agg[str(b)][key]["mean"] for b in batch]; s = [agg[str(b)][key]["std"] for b in batch]
             ax.errorbar(batch, m, yerr=s, fmt=marker + "-", color=color, ms=4, capsize=2, label=label)
         ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlabel("Batch size"); ax.set_ylabel("Inference time (ms)")
-    ax.set_title(f"(b) Latency ({lat['n_seeds'] if lat else '?'} seeds)"); ax.legend(frameon=False, fontsize=7)
+    ax.set_title(f"(b) Latency, compiled ({lat['n_seeds'] if lat else '?'} seeds)"); ax.legend(frameon=False, fontsize=7)
 
-    dist = load("circuit_distillation.json"); topo = load("circuit_topologies.json")
+    runs = [r for r in (load(n) for n in ("circuit_distillation.json", "circuit_distillation_seed1.json",
+                                          "circuit_distillation_seed2.json")) if r]
     ax = axes[2]
-    labels, vals, cols = [], [], []
-    if dist:
-        labels += ["Circuit,\nrandom init", "Circuit,\ndistilled", "XGBoost"]
-        vals += [dist["from_scratch"]["test_auprc"], dist["distilled_finetuned"]["test_auprc"], dist["xgboost_test_auprc"]]
-        cols += ["#d62728", "#9467bd", "#7f7f7f"]
-    if topo and "tree" in topo.get("circuits", {}):
-        labels.append("Tree circuit,\nfrom scratch"); vals.append(topo["circuits"]["tree"]["test_via_braket"]["auprc"]); cols.append("#e377c2")
-    if vals:
-        bars = ax.bar(labels, vals, color=cols, width=0.6)
-        for b, v in zip(bars, vals):
-            ax.text(b.get_x() + b.get_width() / 2, v + 0.004, f"{v:.3f}", ha="center", fontsize=7)
-        ax.set_ylim(min(vals) - 0.03, max(vals) + 0.03)
-    ax.set_ylabel("Test AUPRC"); ax.set_title("(c) Quantum circuits (8 qubits)"); ax.tick_params(axis="x", labelsize=7)
+    if runs:
+        x = np.arange(len(runs)); w = 0.27
+        for i, (key, label, color) in enumerate((("from_scratch", "Random init", "#d62728"),
+                                                 ("distilled_finetuned", "Warm start", "#9467bd"),
+                                                 ("xgboost", "XGBoost", "#7f7f7f"))):
+            vals = [r["xgboost_test_auprc"] if key == "xgboost" else r[key]["test_auprc"] for r in runs]
+            bars = ax.bar(x + (i - 1) * w, vals, w, color=color, label=label)
+            for b, v in zip(bars, vals):
+                ax.text(b.get_x() + b.get_width() / 2, v + 0.004, f"{v:.3f}", ha="center", fontsize=6)
+        ax.set_xticks(x); ax.set_xticklabels([f"Seed {i}" for i in range(len(runs))])
+        ax.set_ylim(0.70, 0.97); ax.legend(frameon=False, fontsize=6.5, ncol=3, loc="upper right")
+    ax.set_ylabel("Test AUPRC"); ax.set_title(f"(c) 8-qubit chain circuit ({len(runs)} seeds)")
 
     fig.savefig(OUT / "results.png", dpi=200)
     print("wrote", OUT / "results.png")

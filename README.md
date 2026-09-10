@@ -14,8 +14,8 @@ thresholds turns that sum into a matrix product state (tensor-train) with one te
 per leaf. The conversion is lossless (checked to floating-point precision against
 XGBoost, Random Forest and CatBoost), nothing is trained from a random start, and the
 decision boundary a risk team has already validated is preserved exactly. The
-tensor-train is then a deployable scorer in its own right, and a teacher for a small
-quantum circuit.
+tensor-train then serves as an exact explainer of the ensemble's decisions, as a fast
+scorer where a compact model is enough, and as a teacher for a small quantum circuit.
 
 ```
 trained tree ensemble ──exact──▶ tensor-train ──SVD──▶ compressed tensor-train
@@ -46,7 +46,7 @@ is exactness) one test.
 | Missing fields, exact expectation | +0.025 / +0.065 / +0.087 / +0.159 AUPRC over XGBoost's native handling at 10 / 20 / 30 / 50 % missing | `04_missing_fields.py` | `missing_fields.json` | `test_tree_to_tt.py` |
 | Exact decision-boundary sensitivity | for the 15 transactions nearest the threshold, 2 flip under a single-bin move, both correcting a model error | `05_boundary_sensitivity.py` | `boundary_sensitivity.json` | `test_boundary_sensitivity.py` |
 | Global interpretability (entropy) | real three-model stack 0.47–0.60 nats, between "dominated by one model" (0.14–0.32) and "genuine blend" (0.69–0.71) | `06_entropy_calibration.py` | `entropy_calibration.json` | `test_stack_entropy.py` |
-| Warm-started quantum circuit | 3 seeds: chain circuit from scratch 0.815 ± 0.031, warm-started 0.843 ± 0.054, XGBoost 0.907; the warm start helps on seed 0 (0.813 → 0.907) and not on seeds 1–2 | `07_circuit_distillation.py` | `circuit_distillation.json` | `test_circuit_distillation.py` |
+| Warm-started quantum circuit | 3 seeds: chain circuit from scratch 0.815 ± 0.031, warm-started 0.842 ± 0.054, XGBoost 0.907; the warm start helps on seed 0 (0.813 → 0.907) and not on seeds 1–2 | `07_circuit_distillation.py` | `circuit_distillation.json` | `test_circuit_distillation.py` |
 | Circuit topology | tree-topology circuit trained from scratch: 0.924, depth 10 vs 22 for the chain | `08_circuit_topologies.py` | `circuit_topologies.json` | `test_braket_tree_circuit.py` |
 
 ![results](figures/results.png)
@@ -59,7 +59,7 @@ ensemble's own bin edges: one rank-1 term per leaf, merged as a direct sum
 reduced 8-feature sample used throughout (60 fraud + 940 legitimate training rows,
 20 + 380 validation and test rows, fraud enriched to 6 % / 5 % so that small-sample
 metrics are not noise) the 300-tree model has 1,522 leaves and the converted
-tensor-train reproduces its margin to ~1e-6. `tt_merge.svd_compress` then
+tensor-train reproduces its margin to within 1e-5. `tt_merge.svd_compress` then
 canonicalises and truncates each bond (Frobenius-optimal, with the discarded weight
 reported per bond): bond dimension 4 already recovers XGBoost's accuracy and the
 curve is flat from 8. On a larger, properly powered setting (2,000 training rows,
@@ -206,7 +206,7 @@ selection and sample; `QDISTILL_SEED=1`, `2`):
 
 The warm start lifts the circuit on seed 0 and does not on seeds 1 and 2,
 where it ends slightly below the circuit trained from scratch; the mean gain
-(0.843 against 0.815) is carried by one seed. The teacher matches XGBoost on
+(0.842 against 0.815) is carried by one seed. The teacher matches XGBoost on
 every seed, so the loss happens in pretraining or fine-tuning; the script
 does not yet log the pretraining fit, which is the next diagnostic. `08_circuit_topologies.py` trains chain and
 tree-topology circuits from scratch: the tree circuit (entangling blocks in a
@@ -296,7 +296,7 @@ characterisation of where exact merging stops being tractable.
 
 Nothing in the construction is specific to fraud: any tree ensemble a bank already
 runs, in anti-money-laundering alerting, credit decisioning or collections, converts
-the same way and inherits the same latency, explanation and warm-start properties.
+the same way and inherits the same explanation and warm-start properties.
 
 ## Data and attribution
 
