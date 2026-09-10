@@ -1,8 +1,8 @@
 """Regenerates the results figure from the committed JSON tables, without
 re-running any experiment: (a) compression curve from
 results/tables/distillation_compression.json, (b) compiled latency from
-results/tables/latency_compiled.json, (c) circuit results over three seeds from
-results/tables/circuit_distillation{,_seed1,_seed2}.json.
+results/tables/latency_compiled.json, (c) chain and tree circuits over three seeds from
+results/tables/circuit_warmstart_seed{0,1,2}.json.
 
 Usage:
     uv run python scripts/make_figures.py
@@ -58,21 +58,22 @@ def main() -> None:
     ax.set_xlabel("Batch size"); ax.set_ylabel("Inference time (ms)")
     ax.set_title(f"(b) Latency, compiled ({lat['n_seeds'] if lat else '?'} seeds)"); ax.legend(frameon=False, fontsize=7)
 
-    runs = [r for r in (load(n) for n in ("circuit_distillation.json", "circuit_distillation_seed1.json",
-                                          "circuit_distillation_seed2.json")) if r]
+    runs = [r for r in (load(f"circuit_warmstart_seed{i}.json") for i in range(3)) if r]
     ax = axes[2]
     if runs:
-        x = np.arange(len(runs)); w = 0.27
-        for i, (key, label, color) in enumerate((("from_scratch", "Random init", "#d62728"),
-                                                 ("distilled_finetuned", "Warm start", "#9467bd"),
-                                                 ("xgboost", "XGBoost", "#7f7f7f"))):
-            vals = [r["xgboost_test_auprc"] if key == "xgboost" else r[key]["test_auprc"] for r in runs]
-            bars = ax.bar(x + (i - 1) * w, vals, w, color=color, label=label)
-            for b, v in zip(bars, vals):
-                ax.text(b.get_x() + b.get_width() / 2, v + 0.004, f"{v:.3f}", ha="center", fontsize=6)
-        ax.set_xticks(x); ax.set_xticklabels([f"Seed {i}" for i in range(len(runs))])
-        ax.set_ylim(0.70, 0.97); ax.legend(frameon=False, fontsize=6.5, ncol=3, loc="upper right")
-    ax.set_ylabel("Test AUPRC"); ax.set_title(f"(c) 8-qubit chain circuit ({len(runs)} seeds)")
+        items = [("Chain,\nscratch", lambda r: r["topologies"]["chain"]["from_scratch"]["test_auprc"], "#d62728"),
+                 ("Chain,\ncopy+FT", lambda r: r["topologies"]["chain"]["warm_start"]["test_auprc"], "#ff9896"),
+                 ("Tree,\nscratch", lambda r: r["topologies"]["tree"]["from_scratch"]["test_auprc"], "#8c564b"),
+                 ("Tree,\ncopy", lambda r: r["topologies"]["tree"]["warm_start"]["pretrained"]["test_auprc_before_finetuning"], "#9467bd"),
+                 ("Tree,\ncopy+FT", lambda r: r["topologies"]["tree"]["warm_start"]["test_auprc"], "#c5b0d5"),
+                 ("XGBoost", lambda r: r["xgboost_test_auprc"], "#7f7f7f")]
+        means = [np.mean([f(r) for r in runs]) for _, f, _ in items]; sds = [np.std([f(r) for r in runs]) for _, f, _ in items]
+        bars = ax.bar([l for l, _, _ in items], means, yerr=sds, capsize=2, color=[c for _, _, c in items], width=0.62)
+        for b, m, sd in zip(bars, means, sds):
+            ax.text(b.get_x() + b.get_width() / 2, m + sd + 0.004, f"{m:.3f}", ha="center", fontsize=6)
+        ax.set_ylim(0.70, 0.97)
+    ax.set_ylabel("Test AUPRC"); ax.set_title(f"(c) 8-qubit circuits ({len(runs)} seeds, mean ± s.d.)")
+    ax.tick_params(axis="x", labelsize=6.5)
 
     fig.savefig(OUT / "results.png", dpi=200)
     print("wrote", OUT / "results.png")

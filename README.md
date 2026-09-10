@@ -27,7 +27,7 @@ trained tree ensemble ──exact──▶ tensor-train ──SVD──▶ compr
            XGBoost at 8 features      "what would flip this call"    which signals the model relies on
                        │
                        └──────────▶ warm start for an 8-qubit circuit on Amazon Braket
-                                    (3 seeds: helps on 1 of 3; see section 5)
+                                    (tree circuit copied from it: 0.881 ± 0.018, 3 seeds)
 ```
 
 ## What is demonstrated
@@ -47,8 +47,8 @@ is exactness) one test.
 | Missing fields, exact expectation | +0.025 / +0.065 / +0.087 / +0.159 AUPRC over XGBoost's native handling at 10 / 20 / 30 / 50 % missing | `04_missing_fields.py` | `missing_fields.json` | `test_tree_to_tt.py` |
 | Exact decision-boundary sensitivity | for the 15 transactions nearest the threshold, 2 flip under a single-bin move, both correcting a model error | `05_boundary_sensitivity.py` | `boundary_sensitivity.json` | `test_boundary_sensitivity.py` |
 | Global interpretability (entropy) | real three-model stack 0.47–0.60 nats, between "dominated by one model" (0.14–0.32) and "genuine blend" (0.69–0.71) | `06_entropy_calibration.py` | `entropy_calibration.json` | `test_stack_entropy.py` |
-| Warm-started quantum circuit | 3 seeds: chain circuit from scratch 0.815 ± 0.031, warm-started 0.842 ± 0.054, XGBoost 0.907; the warm start helps on seed 0 (0.813 → 0.907) and not on seeds 1–2 | `07_circuit_distillation.py` | `circuit_distillation.json` | `test_circuit_distillation.py` |
-| Circuit topology | tree-topology circuit trained from scratch: 0.924, depth 10 vs 22 for the chain | `08_circuit_topologies.py` | `circuit_topologies.json` | `test_braket_tree_circuit.py` |
+| Warm-started quantum circuit | 3 seeds (XGBoost 0.907): from scratch, chain 0.815 ± 0.031 and tree 0.855 ± 0.051; copying the tensor-train into the tree circuit gives 0.881 ± 0.018 (logit correlation with the teacher 0.89; fine-tuning adds nothing, 0.870 ± 0.019), into the chain only 0.810 ± 0.035 (correlation 0.75; fine-tuned 0.842 ± 0.054) | `07_circuit_distillation.py`, `13_circuit_warmstart_topologies.py` | `circuit_distillation*.json`, `circuit_warmstart_seed{0,1,2}.json` | `test_circuit_distillation.py` |
+| Circuit topology | tree circuit (depth 10 vs 22 for the chain) trained from scratch: 0.924 on seed 0, 0.855 ± 0.051 over three seeds | `08_circuit_topologies.py`, `13_circuit_warmstart_topologies.py` | `circuit_topologies.json`, `circuit_warmstart_seed{0,1,2}.json` | `test_braket_tree_circuit.py` |
 
 ![results](figures/results.png)
 
@@ -205,15 +205,23 @@ selection and sample; `QDISTILL_SEED=1`, `2`):
 | 1 | 0.8536 | 0.8456 | 0.9196 | 0.9193 |
 | 2 | 0.7774 | 0.7744 | 0.8869 | 0.8870 |
 
-The warm start lifts the circuit on seed 0 and does not on seeds 1 and 2,
-where it ends slightly below the circuit trained from scratch; the mean gain
-(0.842 against 0.815) is carried by one seed. The teacher matches XGBoost on
-every seed, so the loss happens in pretraining or fine-tuning; the script
-does not yet log the pretraining fit, which is the next diagnostic. `08_circuit_topologies.py` trains chain and
-tree-topology circuits from scratch: the tree circuit (entangling blocks in a
-binary-tree pattern, depth 10 rather than 22 at 8 qubits) reaches 0.924 on this
-small task (single seed), which is why Phase 2 distils into the tree topology as
-well. Pretraining circuits from tensor networks is an established route around
+The warm start lifts the chain circuit on seed 0 and not on seeds 1 and 2.
+`13_circuit_warmstart_topologies.py` explains why and tries the tree topology
+(entangling blocks in a binary-tree pattern, depth 10 rather than 22), logging
+how well each circuit copies the teacher before any fine-tuning. Three seeds,
+test AUPRC (XGBoost 0.907 ± 0.014):
+
+| circuit | from scratch | copied from the teacher | copied, then fine-tuned | logit correlation with the teacher |
+|---|---|---|---|---|
+| chain (depth 22) | 0.815 ± 0.031 | 0.810 ± 0.035 | 0.842 ± 0.054 | 0.75 |
+| tree (depth 10) | 0.855 ± 0.051 | 0.881 ± 0.018 | 0.870 ± 0.019 | 0.89 |
+
+The deep chain copies only part of the teacher, so it starts no better than a
+random initialisation and fine-tuning helps on one seed of three. The shallow
+tree circuit copies it well, and the copy alone is the most accurate and least
+seed-dependent circuit; fine-tuning on the labels adds nothing to it. The tree
+circuit trained from scratch reaches 0.924 on seed 0 but varies widely across
+seeds. Pretraining circuits from tensor networks is an established route around
 barren plateaus (Huggins et al. 2019; Dborin et al. 2022; Rudolph et al. 2023); what
 is new here is that the teacher is an exact image of the production model rather
 than a separately trained surrogate.
@@ -233,8 +241,8 @@ than a separately trained surrogate.
   (XGBoost's 95% bootstrap interval is 0.79–1.00); paired comparisons on the
   same rows are tight (`14_bootstrap_intervals.py`).
 - **Hardware.** All circuit results are on the local simulator; no managed
-  simulator or QPU job has been run yet. The tree-topology circuit result is a
-  single seed.
+  simulator or QPU job has been run yet. Circuit results cover three seeds on a
+  20-fraud test sample.
 - **Latency** is measured on one core. The tensor-train's advantage is shown
   for compact (8-feature) models; because its cost grows with the number of
   features times the square of the bond dimension, it has to be re-established
@@ -257,7 +265,7 @@ src/qdistill/
     mlp_baseline.py            the neural-network competitor used for the KernelSHAP comparison
     data.py, preprocessing.py, metrics.py, config.py
 scripts/
-    00_prepare_data.py ... 12_compiled_latency.py   one experiment per reported result
+    00_prepare_data.py ... 14_bootstrap_intervals.py   one experiment per reported result
     make_figures.py            regenerates figures/results.png from results/tables/*.json
 results/tables/                committed JSON result tables (the source of every number above)
 tests/                         exactness and mechanism tests (see the table at the top)
@@ -282,6 +290,7 @@ uv run python scripts/09_attribution_full_scale.py     # ~20 min (trains an MLP 
 uv run python scripts/10_tt_finetune.py                # ~5 min (fine-tuning + random-init control)
 uv run python scripts/11_hierarchical_merge.py         # ~6 min, ~6 GB (runs the one-step merge too)
 uv run python scripts/12_compiled_latency.py           # ~6 min, 5 seeds
+uv run python scripts/13_circuit_warmstart_topologies.py --seed 0   # ~1.7 h per seed (1, 2 for repeats); local Braket simulator
 uv run python scripts/14_bootstrap_intervals.py        # ~4 min, ~7 GB (rebuilds the models of scripts 01 and 04)
 uv run python scripts/make_figures.py
 ```
