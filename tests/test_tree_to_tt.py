@@ -130,3 +130,33 @@ def test_missing_feature_marginalization_matches_brute_force_against_xgboost_its
         f"marginalized ({marginalized:.4f}) should match the brute-force average of "
         f"XGBoost's OWN predictions ({brute_force_average:.4f})"
     )
+
+
+def test_two_missing_features_marginalization_matches_brute_force_against_xgboost_itself():
+    """Two fields missing at once, in one contraction. The reference embedding
+    is a product of per-site training marginals, so the exact expectation is
+    the average of XGBoost's OWN margin over every PAIR of training values for
+    the two missing sites (both sites drive the label, so the check is not
+    trivially satisfied by trees that ignore them)."""
+    booster, feature_names, rng = _fit_small_xgb(seed=5, n_features=4, n_estimators=6, max_depth=3)
+    cores, info = xgboost_to_tensor_train(booster, feature_names, base_score=0.5)
+
+    X_train = rng.uniform(-1, 1, size=(200, len(feature_names))).astype(np.float32)
+    reference = reference_embedding_from_training_bins(X_train, info)
+
+    sites = [0, 1]
+    row = rng.uniform(-1, 1, size=(1, len(feature_names))).astype(np.float32)
+    mask = np.zeros((1, len(feature_names)), dtype=bool)
+    mask[0, sites] = True
+    marginalized = predict_logit_with_missing_bins(cores, row, mask, reference, info)[0]
+
+    a, b = np.meshgrid(X_train[:, sites[0]], X_train[:, sites[1]], indexing="ij")
+    swapped = np.repeat(row, a.size, axis=0)
+    swapped[:, sites[0]] = a.ravel()
+    swapped[:, sites[1]] = b.ravel()
+    brute_force_average = booster.predict(xgb.DMatrix(swapped), output_margin=True).mean()
+
+    assert np.isclose(marginalized, brute_force_average, atol=1e-2), (
+        f"two-site marginalized ({marginalized:.4f}) should match the brute-force average "
+        f"over all value pairs of XGBoost's OWN predictions ({brute_force_average:.4f})"
+    )

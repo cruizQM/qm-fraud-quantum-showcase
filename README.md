@@ -228,7 +228,8 @@ than a separately trained surrogate.
 
 ## Honest limits
 
-- **Scale.** Every result uses the disclosed 8-feature samples. The one-step
+- **Scale.** Every result uses the disclosed 8-feature samples, except the
+  attribution-stability comparison, which also uses all 29 features. The one-step
   exact merge's memory grows with the square of the leaf count, so a 300-tree
   model on all 29 features (7,273 leaves) is out of its reach (on the order of
   500 GB); the hierarchical merge is validated on the 2,052-leaf model, and
