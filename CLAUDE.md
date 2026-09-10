@@ -33,4 +33,5 @@ Each script writes a JSON table to `results/tables/`; committed tables regenerat
 - Python via **uv**; `tensorkrowch==1.1.6` pinned.
 - Committed result tables under `results/tables/` stay tracked (they back the proposal); since 2026-09-10 `.gitignore` excludes `data/`, `outputs/`, `*.csv`, `*.npy`, etc. The ULB dataset is never committed.
 - Seeds fixed (0) unless a script states otherwise; every claim needs a script + table (+ test for exactness claims).
+- Licence: Apache-2.0 (`LICENSE`, `NOTICE`, copyright Quantum Mads); the ULB dataset is not covered.
 - GitHub: `cruizQM/qm-fraud-quantum-showcase`. Update `repo.yaml` when status or findings change.

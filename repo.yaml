@@ -1,6 +1,7 @@
 name: qm-fraud-quantum-showcase
 line: qm
 status: active
+license: Apache-2.0
 tags: [fraud, distillation, tn, proposal]
 purpose: >
   Public-facing repository for the HSBC problem statement of the 2026 Global Quantum + AI

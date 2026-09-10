@@ -269,6 +269,7 @@ scripts/
     make_figures.py            regenerates figures/results.png from results/tables/*.json
 results/tables/                committed JSON result tables (the source of every number above)
 tests/                         exactness and mechanism tests (see the table at the top)
+LICENSE, NOTICE                Apache License 2.0 and copyright notice
 ```
 
 ## Reproducing
@@ -317,3 +318,8 @@ the same way and inherits the same explanation and warm-start properties.
 Dataset: A. Dal Pozzolo, O. Caelen, R. A. Johnson and G. Bontempi, "Calibrating
 probability with undersampling for unbalanced classification," IEEE SSCI 2015.
 European Cardholder dataset, Open Database License; not redistributed here.
+
+## License
+
+Code licensed under the [Apache License 2.0](LICENSE); see [NOTICE](NOTICE).
+Copyright 2026 Quantum Mads. The dataset is not covered by this licence (see above).
