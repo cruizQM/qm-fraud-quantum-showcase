@@ -1,0 +1,32 @@
+{
+  "n_explain": 20,
+  "n_features": 8,
+  "selected_features": [
+    "V14",
+    "V4",
+    "V8",
+    "V12",
+    "Amount",
+    "V13",
+    "V21",
+    "V11"
+  ],
+  "tensor_train": {
+    "time_sec": 0.0029910150915384293,
+    "n_model_evals": 9,
+    "deterministic": true,
+    "bond_dim": 8
+  },
+  "xgboost_treeshap": {
+    "time_sec": 0.025749729946255684,
+    "deterministic": true
+  },
+  "mlp_kernelshap": {
+    "time_sec": 0.11666612885892391,
+    "n_model_evals": 4000,
+    "deterministic": false,
+    "run_to_run_relative_instability": 0.06042308733245514,
+    "nsamples": 200
+  },
+  "rank_agreement_tt_vs_treeshap": 0.8238095238095241
+}

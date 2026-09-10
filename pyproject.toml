@@ -1,0 +1,47 @@
+[project]
+name = "qdistill"
+version = "0.1.0"
+description = "Exact tensor-network distillation of trained tree ensembles for explainable, low-latency card-fraud detection, and its use as a teacher for a small quantum circuit (Amazon Braket / PennyLane) -- public repository for the HSBC problem statement of the 2026 Global Quantum + AI Challenge, Phase 1."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "pandas",
+    "pyarrow",
+    "scikit-learn",
+    "xgboost",
+    "catboost",
+    "shap",
+    "matplotlib",
+    "torch",
+    "amazon-braket-sdk>=1.127.0",
+    "pennylane>=0.45.1",
+    "amazon-braket-pennylane-plugin>=1.35.1.post1",
+    "tensorkrowch==1.1.6",
+    "onnxruntime>=1.29.0",
+    "onnxmltools>=1.16.0",
+    "onnx>=1.22.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qdistill"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

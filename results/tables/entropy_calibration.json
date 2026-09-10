@@ -1,0 +1,68 @@
+{
+  "sites": [
+    "xgb_proba",
+    "rf_proba",
+    "cat_proba"
+  ],
+  "real_stack": {
+    "meta_n_leaves": 202,
+    "bond_dims": [
+      202,
+      202
+    ],
+    "entropy_per_cut_nats": [
+      0.5974974737285941,
+      0.47062158181877783
+    ],
+    "base_test_auprc": {
+      "xgb_proba": 0.9126677190213103,
+      "rf_proba": 0.9199719551282052,
+      "cat_proba": 0.9150794436469833
+    },
+    "meta_test_auprc": 0.905,
+    "selected_features": [
+      "V14",
+      "V4",
+      "V8",
+      "V12",
+      "Amount",
+      "V13",
+      "V21",
+      "V11"
+    ]
+  },
+  "synthetic_genuine_blend": {
+    "meta_n_leaves": 693,
+    "bond_dims": [
+      693,
+      693
+    ],
+    "entropy_per_cut_nats": [
+      0.6878982185459315,
+      0.7094281719382212
+    ],
+    "expert_test_auprc": [
+      0.7102717789221447,
+      0.746089903098233,
+      0.7364873938096305
+    ],
+    "meta_test_auprc": 0.9652944490265138
+  },
+  "synthetic_dominated": {
+    "meta_n_leaves": 708,
+    "bond_dims": [
+      708,
+      708
+    ],
+    "entropy_per_cut_nats": [
+      0.32031932108826505,
+      0.13994275771198303
+    ],
+    "expert_test_auprc": [
+      0.9746953707871827,
+      0.5478407375749345,
+      0.5104852331137886
+    ],
+    "meta_test_auprc": 0.9696005563851975
+  }
+}

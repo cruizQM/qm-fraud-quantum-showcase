@@ -1,0 +1,29 @@
+__pycache__/
+*.py[codz]
+*$py.class
+.venv/
+.pytest_cache/
+data/raw/
+data/processed/
+# Committed: the JSON result tables every figure is regenerated from.
+results/*
+!results/tables/
+results/tables/*
+!results/tables/*.json
+*.egg-info/
+.DS_Store
+catboost_info/
+
+# repo-organization defaults (2026-09-10): results live in ClearML / <repo>_artifacts, not git
+*.pkl
+*.csv
+*.npy
+*.npz
+*.pt
+*.ckpt
+checkpoints/
+outputs/
+data/
+.clearml
+.env
+.ipynb_checkpoints/

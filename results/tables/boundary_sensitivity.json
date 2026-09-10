@@ -1,0 +1,399 @@
+{
+  "selected_features": [
+    "V14",
+    "V4",
+    "V8",
+    "V12",
+    "Amount",
+    "V13",
+    "V21",
+    "V11"
+  ],
+  "weak_xgb_params": {
+    "max_depth": 3,
+    "learning_rate": 0.1,
+    "n_estimators": 15
+  },
+  "test_auprc": 0.8551461988304093,
+  "n_borderline_test_rows": 400,
+  "decision_threshold_logit": 1.5915715611667518,
+  "n_explain": 15,
+  "n_single_bin_flippable": 2,
+  "transactions": [
+    {
+      "row": 85,
+      "true_label": 1,
+      "current_logit": 1.5723806619644165,
+      "current_proba": 0.8281226754188538,
+      "most_negative_single_move": {
+        "feature": "V4",
+        "direction": "left",
+        "logit_change": -0.07794082164764404,
+        "raw_distance_to_that_boundary": 0.22111242466249004
+      },
+      "most_positive_single_move": {
+        "feature": "V4",
+        "direction": "right",
+        "logit_change": 0.5135475397109985,
+        "raw_distance_to_that_boundary": 0.38302763533750994
+      },
+      "most_decisive_single_move": {
+        "feature": "V4",
+        "direction": "right",
+        "logit_change": 0.5135475397109985,
+        "raw_distance_to_that_boundary": 0.38302763533750994
+      },
+      "single_bin_move_would_flip_prediction": true
+    },
+    {
+      "row": 1,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 1.2333899806772095
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 1.2333899806772095
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 1.2333899806772095
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 46,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.8499645833026594
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.8499645833026594
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.8499645833026594
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 9,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 0.3679796143851499
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 0.3679796143851499
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 0.3679796143851499
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 100,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 1.14707768217278
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 1.14707768217278
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 1.14707768217278
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 81,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 5.6991957893072005
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 5.6991957893072005
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 5.6991957893072005
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 352,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.44217255228929
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.44217255228929
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.44217255228929
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 320,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.41884187290706
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.41884187290706
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.41884187290706
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 274,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 10.3428426390579
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 10.3428426390579
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 10.3428426390579
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 329,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 0.6391661488976199
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 0.6391661488976199
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 0.6391661488976199
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 319,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 8.6628266621928
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 8.6628266621928
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 8.6628266621928
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 163,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.5981731791564
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.5981731791564
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 2.5981731791564
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 213,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 5.4083640459282005
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 5.4083640459282005
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 5.4083640459282005
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 31,
+      "true_label": 1,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 1.98041189705192
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 1.98041189705192
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": 0.0,
+        "raw_distance_to_that_boundary": 1.98041189705192
+      },
+      "single_bin_move_would_flip_prediction": false
+    },
+    {
+      "row": 194,
+      "true_label": 0,
+      "current_logit": 2.085928201675415,
+      "current_proba": 0.8895279765129089,
+      "most_negative_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": -1.7535549402236938,
+        "raw_distance_to_that_boundary": 0.22975448860334025
+      },
+      "most_positive_single_move": {
+        "feature": "V14",
+        "direction": "left",
+        "logit_change": -0.0,
+        "raw_distance_to_that_boundary": 0.9652321113966602
+      },
+      "most_decisive_single_move": {
+        "feature": "V14",
+        "direction": "right",
+        "logit_change": -1.7535549402236938,
+        "raw_distance_to_that_boundary": 0.22975448860334025
+      },
+      "single_bin_move_would_flip_prediction": true
+    }
+  ]
+}

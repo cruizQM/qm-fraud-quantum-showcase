@@ -1,0 +1,72 @@
+{
+  "setting": "scripts/04 model: 8 features, 2,000 training rows, 300 trees of depth 6",
+  "n_leaves": 2052,
+  "xgboost_test_auprc": 0.8607007466626245,
+  "trees_per_cluster": 20,
+  "intermediate_cap": 64,
+  "hierarchical": {
+    "n_leaves": 2052,
+    "max_bins": 49,
+    "base_score_offset": 0.0,
+    "n_clusters": 15,
+    "largest_cluster_leaves": 388,
+    "merge_levels": 4,
+    "max_discarded_per_level": [
+      0.0,
+      5.868477197523703e-07,
+      1.5791296483769202e-06,
+      1.6674729824694978e-06,
+      4.925872029160061e-07
+    ],
+    "peak_core_bytes": 177191840,
+    "final_bond_dims": [
+      49,
+      64,
+      64,
+      64,
+      64,
+      64,
+      49
+    ],
+    "seconds": 4.767649989575148,
+    "seconds_clusters": 3.4782565645873547
+  },
+  "hierarchical_process_peak_gb": 1.0386466979980469,
+  "baseline_process_peak_gb": 0.6564445495605469,
+  "one_step": {
+    "core_bytes": 4952592288,
+    "process_peak_gb": 5.651355743408203,
+    "seconds": 1.3421190846711397,
+    "exactness_gap_test": 1.239776611328125e-05
+  },
+  "by_bond_dim": {
+    "2": {
+      "one_step_auprc": 0.862573867176361,
+      "hierarchical_auprc": 0.8625746395112664,
+      "max_logit_diff_hier_vs_one_step": 0.0013628005981445312,
+      "max_logit_diff_hier_vs_xgboost": 7.375509262084961,
+      "max_logit_diff_one_step_vs_xgboost": 7.375548362731934
+    },
+    "4": {
+      "one_step_auprc": 0.8617443479862456,
+      "hierarchical_auprc": 0.8617425338343128,
+      "max_logit_diff_hier_vs_one_step": 0.0017452239990234375,
+      "max_logit_diff_hier_vs_xgboost": 4.750803470611572,
+      "max_logit_diff_one_step_vs_xgboost": 4.750328540802002
+    },
+    "8": {
+      "one_step_auprc": 0.8611099304181147,
+      "hierarchical_auprc": 0.8611099304181147,
+      "max_logit_diff_hier_vs_one_step": 0.0016427040100097656,
+      "max_logit_diff_hier_vs_xgboost": 2.0320327281951904,
+      "max_logit_diff_one_step_vs_xgboost": 2.0311200618743896
+    },
+    "16": {
+      "one_step_auprc": 0.8609160578492017,
+      "hierarchical_auprc": 0.8609187884435217,
+      "max_logit_diff_hier_vs_one_step": 0.005049705505371094,
+      "max_logit_diff_hier_vs_xgboost": 0.8450932502746582,
+      "max_logit_diff_one_step_vs_xgboost": 0.844820499420166
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "setting": {
+    "lr": 0.0002,
+    "steps": 1500,
+    "seed": 0,
+    "features": [
+      "V14",
+      "V4",
+      "V8",
+      "V12",
+      "Amount",
+      "V13",
+      "V21",
+      "V11"
+    ],
+    "train": [
+      1000,
+      60
+    ],
+    "test": [
+      400,
+      20
+    ],
+    "n_leaves": 1522
+  },
+  "xgboost_test_auprc": 0.9143644957983194,
+  "bond_caps": {
+    "4": {
+      "actual_bond": 4,
+      "max_discarded": 0.0037974271430836204,
+      "warm_start_step0_test_auprc": 0.9132223040117778,
+      "warm_finetuned": {
+        "best_step": 1380,
+        "test_auprc": 0.9171553016110904
+      },
+      "random_control": {
+        "init": "tensorkrowch randn_eye, std 0.3",
+        "best_step": 400,
+        "test_auprc": 0.23737948950500445
+      },
+      "random_control_identity_init": {
+        "best_step": 1500,
+        "test_auprc": 0.8281135940870215
+      }
+    },
+    "8": {
+      "actual_bond": 8,
+      "max_discarded": 0.0007009806377179517,
+      "warm_start_step0_test_auprc": 0.9147942446043167,
+      "warm_finetuned": {
+        "best_step": 110,
+        "test_auprc": 0.9156012493492973
+      },
+      "random_control": {
+        "init": "tensorkrowch randn_eye, std 0.3",
+        "best_step": 210,
+        "test_auprc": 0.45395716634295097
+      },
+      "random_control_identity_init": {
+        "best_step": 1500,
+        "test_auprc": 0.723279269969691
+      }
+    }
+  }
+}

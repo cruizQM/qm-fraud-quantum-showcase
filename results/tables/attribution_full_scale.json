@@ -1,0 +1,39 @@
+{
+  "n_explain": 20,
+  "kernelshap_nsamples": 200,
+  "eight_features": {
+    "n_features": 8,
+    "coalition_space_size": 256,
+    "kernelshap_coverage_fraction": 0.78125,
+    "mlp_kernelshap": {
+      "time_sec": 0.11666612885892391,
+      "n_model_evals": 4000,
+      "deterministic": false,
+      "run_to_run_relative_instability": 0.06042308733245514,
+      "nsamples": 200
+    },
+    "rank_agreement_tt_vs_treeshap": 0.8238095238095241
+  },
+  "all_features": {
+    "n_features": 29,
+    "n_leaves": 1244,
+    "coalition_space_size": 536870912,
+    "kernelshap_coverage_fraction": 3.725290298461914e-07,
+    "tensor_train": {
+      "time_sec": 0.019328614696860313,
+      "n_model_evals": 30,
+      "deterministic": true
+    },
+    "xgboost_treeshap": {
+      "time_sec": 0.015012722462415695,
+      "deterministic": true
+    },
+    "mlp_kernelshap": {
+      "time_sec": 0.10117416642606258,
+      "n_model_evals": 4000,
+      "deterministic": false,
+      "run_to_run_relative_instability": 0.4676262291870253
+    },
+    "rank_agreement_tt_vs_treeshap": 0.8010344827586204
+  }
+}

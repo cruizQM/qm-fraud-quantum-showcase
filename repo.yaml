@@ -1,0 +1,32 @@
+name: qm-fraud-quantum-showcase
+line: qm
+status: active
+tags: [fraud, distillation, tn, proposal]
+purpose: >
+  Public-facing repository for the HSBC problem statement of the 2026 Global Quantum + AI
+  Challenge (Phase 1, team Quantum Mads). Converts trained tree ensembles (XGBoost, Random Forest,
+  CatBoost) exactly into tensor-trains, compresses them, and uses them as deployable,
+  explainable scorers and as teachers for small quantum circuits on Amazon Braket / PennyLane.
+  Every number in the proposal maps to one script, one committed result table and one test.
+entrypoints:
+  - uv run pytest tests/
+  - uv run python scripts/00_prepare_data.py  # needs data/raw/creditcard.csv (ULB dataset)
+  - uv run python scripts/01_distillation_compression.py
+  - uv run python scripts/02_latency_benchmark.py
+  - uv run python scripts/07_circuit_distillation.py
+  - uv run python scripts/make_figures.py
+depends_on:
+  - tensorkrowch  # pinned 1.1.6
+  - xgboost
+  - amazon-braket-sdk
+  - pennylane
+key_results:
+  - Tree-ensemble to tensor-train conversion is lossless (margin reproduced to within 1e-5); bond dimension 4 already matches XGBoost (0.913 vs 0.914 AUPRC).
+  - Compressed TT matches XGBoost before any training (within 0.004 AUPRC, at or above it in 4 of 6 settings, 3 seeds x 2 bond dims); fine-tuning never lowers it and adds up to +0.004, with 5 of 6 fine-tuned networks at or above XGBoost.
+  - Latency (one core, compiled on both sides): 8-feature model 4.3-8.8x faster than the faster XGBoost path at batch sizes 1-10,000 (5 seeds).
+  - Hierarchical merge matches the one-step merge's AUPRC on the 2,052-leaf model with 28x less core memory.
+  - Exact missing-field expectation adds +0.025 to +0.159 AUPRC over XGBoost's native handling at 10-50% missing.
+  - 8-qubit chain circuit over 3 seeds: the distilled warm start helps on 1 of 3 (0.813 to 0.907 on seed 0, none on seeds 1-2); mean 0.843 vs 0.815 from scratch; tree-topology circuit reaches 0.924 (single seed).
+use_when: You need the exact tree-ensemble-to-tensor-train distillation, the HSBC Phase 1 showcase numbers, or TT-warm-started quantum circuits.
+last_reviewed: 2026-09-10
+# NOTE: python package is named qdistill.

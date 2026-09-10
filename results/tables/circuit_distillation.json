@@ -1,0 +1,30 @@
+{
+  "sample": {
+    "train": 1000,
+    "train_fraud": 60,
+    "val": 400,
+    "test": 400,
+    "test_fraud": 20,
+    "n_qubits": 8,
+    "selected_features": [
+      "V14",
+      "V4",
+      "V8",
+      "V12",
+      "Amount",
+      "V13",
+      "V21",
+      "V11"
+    ]
+  },
+  "xgboost_test_auprc": 0.9143644957983194,
+  "teacher_test_auprc": 0.9147942446043167,
+  "from_scratch": {
+    "best_step": 60,
+    "test_auprc": 0.813089274495533
+  },
+  "distilled_finetuned": {
+    "best_step": 45,
+    "test_auprc": 0.9074458874458875
+  }
+}
