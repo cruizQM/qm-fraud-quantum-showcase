@@ -72,7 +72,7 @@ def main() -> None:
         for b, m, sd in zip(bars, means, sds):
             ax.text(b.get_x() + b.get_width() / 2, m + sd + 0.004, f"{m:.3f}", ha="center", fontsize=6)
         ax.set_ylim(0.70, 0.97)
-    ax.set_ylabel("Test AUPRC"); ax.set_title(f"(c) 8-qubit circuits ({len(runs)} seeds, mean ± s.d.)")
+    ax.set_ylabel("Test AUPRC"); ax.set_title(f"(c) 8-qubit circuits ({len(runs)} seeds)")
     ax.tick_params(axis="x", labelsize=6.5)
 
     fig.savefig(OUT / "results.png", dpi=200)
