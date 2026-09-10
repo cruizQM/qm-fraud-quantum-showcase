@@ -38,6 +38,7 @@ is exactness) one test.
 | Capability | Result (ULB, test split) | Script | Result table | Test |
 |---|---|---|---|---|
 | Exact distillation, then compression | bond dimension 4 already matches XGBoost (0.913 vs 0.914 AUPRC); curve flat from 8 | `01_distillation_compression.py` | `distillation_compression.json` | `test_tree_to_tt.py` |
+| Bootstrap intervals | paired 95% intervals over test transactions: compressed tensor-train minus XGBoost −0.007 to +0.003 AUPRC (bond 4, reduced sample) and −0.002 to +0.004 (bond 8, 2,052-leaf model); missing-field gain above zero at every rate (0.010–0.042 at 10% up to 0.127–0.191 at 50%) | `14_bootstrap_intervals.py` | `bootstrap_intervals.json` | — |
 | Hierarchical conversion | same test AUPRC as the one-step merge at bond 2–16 on the 2,052-leaf model, with 28× less memory for the cores | `11_hierarchical_merge.py` | `hierarchical_merge.json` | `test_hierarchical_merge.py` |
 | Warm start and fine-tuning | the compressed network matches XGBoost before any training (within 0.004 AUPRC, above it in 4 of 6 settings; 3 seeds × 2 bond dimensions); fine-tuning never lowers it and adds up to +0.004; the same architecture from a random start reaches 0.05–0.83 | `10_tt_finetune.py` | `tt_finetune_lr0.0002_steps1500_seed{0,1,2}.json` | `test_tt_finetune.py` |
 | Inference latency | 8 features, bond 8: tensor-train 4.3–8.8× faster than the faster XGBoost path at every batch size 1–10,000, compiled against compiled (Numba vs stock / ONNX Runtime XGBoost; 5 seeds, one core, different rows each repeat) | `12_compiled_latency.py` | `latency_compiled.json` | `test_fast_contraction.py` |
@@ -227,7 +228,10 @@ than a separately trained surrogate.
   expected to need larger bond dimensions.
 - **Sampling.** The circuit experiments use a stratified sample with fraud
   enriched to 6 % (stated in every result table) rather than the dataset's 0.172 %;
-  Phase 2 adopts ratio-preserving stratified subsampling for hardware runs.
+  Phase 2 adopts ratio-preserving stratified subsampling for hardware runs. The
+  reduced test sample has 20 fraud cases, so absolute AUPRC there is uncertain
+  (XGBoost's 95% bootstrap interval is 0.79–1.00); paired comparisons on the
+  same rows are tight (`14_bootstrap_intervals.py`).
 - **Hardware.** All circuit results are on the local simulator; no managed
   simulator or QPU job has been run yet. The tree-topology circuit result is a
   single seed.
@@ -278,6 +282,7 @@ uv run python scripts/09_attribution_full_scale.py     # ~20 min (trains an MLP 
 uv run python scripts/10_tt_finetune.py                # ~5 min (fine-tuning + random-init control)
 uv run python scripts/11_hierarchical_merge.py         # ~6 min, ~6 GB (runs the one-step merge too)
 uv run python scripts/12_compiled_latency.py           # ~6 min, 5 seeds
+uv run python scripts/14_bootstrap_intervals.py        # ~4 min, ~7 GB (rebuilds the models of scripts 01 and 04)
 uv run python scripts/make_figures.py
 ```
 
