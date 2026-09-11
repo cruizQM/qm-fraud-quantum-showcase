@@ -26,7 +26,7 @@ Each script writes a JSON table to `results/tables/`; committed tables regenerat
 - Latency (one core, compiled on both sides, different rows per repeat): 8-feature model 4.3-8.8x faster than the faster XGBoost path at every batch size 1-10,000 (5 seeds).
 - Hierarchical merge: identical AUPRC to the one-step merge on the 2,052-leaf model with 28x less core memory.
 - KernelSHAP instability grows with feature count (6% at 8 features vs 47% at 29); TT attribution is exact and deterministic.
-- Missing fields: +0.025/+0.065/+0.087/+0.159 AUPRC at 10/20/30/50% missing.
+- Missing fields: +0.025/+0.065/+0.087/+0.159 AUPRC at 10/20/30/50% missing; at a fixed 98-alert review budget +4.4/+8.0/+10.8/+17.8 of 98 frauds caught (script 15), but at an unchanged complete-data threshold fewer frauds caught and far fewer false alerts.
 - Circuit (8 qubits, 3 seeds, XGBoost 0.907): copying the TT into the tree circuit (depth 10 vs 22 for the chain) gives 0.881 ± 0.018 (logit corr. with the teacher 0.89), the best and most consistent circuit; from scratch, chain 0.815 ± 0.031 and tree 0.855 ± 0.051 (0.924 on seed 0 only). The chain copies the teacher only partly (corr. 0.75); its warm start helps on 1 of 3 seeds (0.842 ± 0.054 after fine-tuning).
 
 ## Conventions

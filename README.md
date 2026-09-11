@@ -45,6 +45,7 @@ is exactness) one test.
 | Exact per-transaction attribution | one masked contraction per feature, batched, deterministic; compared with TreeSHAP and KernelSHAP | `03_attribution_benchmark.py` | `attribution_benchmark.json` | `test_attribution.py` |
 | KernelSHAP instability scales with feature count | 6% run-to-run instability at 8 features vs 47% at 29 (same sample, same 200-sample budget) — the tensor-train's exact attribution has no such degradation | `09_attribution_full_scale.py` | `attribution_full_scale.json` | `test_attribution.py` |
 | Missing fields, exact expectation | +0.025 / +0.065 / +0.087 / +0.159 AUPRC over XGBoost's native handling at 10 / 20 / 30 / 50 % missing | `04_missing_fields.py` | `missing_fields.json` | `test_tree_to_tt.py` |
+| Missing fields, operational | with review capacity fixed at the 98 highest-scoring alerts, catches 4.4 / 8.0 / 10.8 / 17.8 more of the 98 test frauds at 10 / 20 / 30 / 50 % missing (every paired 95% interval above zero); at an unchanged complete-data threshold it raises fewer false alerts but catches fewer frauds | `15_missing_fields_operational.py` | `missing_fields_operational.json` | — |
 | Exact decision-boundary sensitivity | for the 15 transactions nearest the threshold, 2 flip under a single-bin move, both correcting a model error | `05_boundary_sensitivity.py` | `boundary_sensitivity.json` | `test_boundary_sensitivity.py` |
 | Global interpretability (entropy) | real three-model stack 0.47–0.60 nats, between "dominated by one model" (0.14–0.32) and "genuine blend" (0.69–0.71) | `06_entropy_calibration.py` | `entropy_calibration.json` | `test_stack_entropy.py` |
 | Warm-started quantum circuit | 3 seeds (XGBoost 0.907): from scratch, chain 0.815 ± 0.031 and tree 0.855 ± 0.051; copying the tensor-train into the tree circuit gives 0.881 ± 0.018 (logit correlation with the teacher 0.89; fine-tuning adds nothing, 0.870 ± 0.019), into the chain only 0.810 ± 0.035 (correlation 0.75; fine-tuned 0.842 ± 0.054) | `07_circuit_distillation.py`, `13_circuit_warmstart_topologies.py` | `circuit_distillation*.json`, `circuit_warmstart_seed{0,1,2}.json` | `test_circuit_distillation.py` |
@@ -164,6 +165,13 @@ exact, sampling-free answers, each as one contraction against a modified embeddi
   missing. `04_missing_fields.py` masks features at 10–50 % (five mask seeds) and
   compares with XGBoost's native default-direction handling on the same masked
   rows: +0.025 / +0.065 / +0.087 / +0.159 AUPRC.
+  `15_missing_fields_operational.py` restates this operationally on the same model
+  and masks: with review capacity fixed at the 98 highest-scoring alerts, the
+  tensor-train catches 79.4 / 74.4 / 70.8 / 62.0 of the 98 test frauds against
+  XGBoost's 75.0 / 66.4 / 60.0 / 44.2. At a threshold tuned on complete data and
+  left unchanged it is more cautious (1.4 against 11.8 false alerts at 30 %
+  missing, but 45.2 against 53.8 frauds caught), so its threshold is re-tuned for
+  the expected missing rate.
 - **Boundary sensitivity.** The model is piecewise constant on the ensemble's own
   bins, so the exact effect of moving any feature into its neighbouring bin is one
   contraction. `05_boundary_sensitivity.py` reports, for the 15 transactions
@@ -266,7 +274,7 @@ src/qdistill/
     mlp_baseline.py            the neural-network competitor used for the KernelSHAP comparison
     data.py, preprocessing.py, metrics.py, config.py
 scripts/
-    00_prepare_data.py ... 14_bootstrap_intervals.py   one experiment per reported result
+    00_prepare_data.py ... 15_missing_fields_operational.py   one experiment per reported result
     make_figures.py            regenerates figures/results.png from results/tables/*.json
 results/tables/                committed JSON result tables (the source of every number above)
 tests/                         exactness and mechanism tests (see the table at the top)
