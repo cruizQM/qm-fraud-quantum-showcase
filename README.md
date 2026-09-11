@@ -264,8 +264,9 @@ random initialisation and fine-tuning helps on one seed of three. The shallow
 tree circuit copies it well, and the copy alone is the most accurate and least
 seed-dependent circuit; fine-tuning on the labels adds nothing to it. The tree
 circuit trained from scratch reaches 0.924 on seed 0 but varies widely across
-seeds. Pretraining circuits from tensor networks is an established route around
-barren plateaus (Huggins et al. 2019; Dborin et al. 2022; Rudolph et al. 2023); what
+seeds. Pretraining circuits from tensor networks is an established way to avoid
+poor random starts, including the barren plateaus that appear as circuits grow
+(Huggins et al. 2019; Dborin et al. 2022; Rudolph et al. 2023); what
 is new here is that the teacher is an exact image of the production model rather
 than a separately trained surrogate.
 
