@@ -5,10 +5,9 @@ rest of this repo.
 1. THE hardware-relevance claim, checked directly from circuit
    structure, not asserted: the tree ansatz has strictly lower depth
    than the matched chain ansatz at the same qubit count, and the gap
-   grows with qubit count (log n vs n) -- exactly the "shorter
-   worst-case path" property already validated classically
-   (tests/test_tree_tensor_network.py), now checked for its quantum-
-   circuit form.
+   grows with qubit count (log n vs n) -- the "shorter worst-case
+   path" property of tree tensor networks, checked here for its
+   quantum-circuit form.
 2. Both ansätze use the same number of parameters and entangling
    blocks at a given qubit count (a fair comparison -- the depth
    difference comes from CONNECTIVITY, not from one ansatz having more

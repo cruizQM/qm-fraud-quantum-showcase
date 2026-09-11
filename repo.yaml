@@ -5,8 +5,8 @@ license: Apache-2.0
 tags: [fraud, distillation, tn, proposal]
 purpose: >
   Public-facing repository for the HSBC problem statement of the 2026 Global Quantum + AI
-  Challenge (Phase 1, team Quantum Mads). Converts trained tree ensembles (XGBoost, Random Forest,
-  CatBoost) exactly into tensor-trains, compresses them, and uses them as deployable,
+  Challenge (Phase 1, team Quantum Mads). Converts trained XGBoost ensembles exactly into
+  tensor-trains (Random Forest and CatBoost conversions are in the private repository), compresses them, and uses them as deployable,
   explainable scorers and as teachers for small quantum circuits on Amazon Braket / PennyLane.
   Every number in the proposal maps to one script, one committed result table and one test.
 entrypoints:

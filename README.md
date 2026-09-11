@@ -12,7 +12,7 @@ decision tree is an axis-aligned box in feature space and the ensemble's score i
 weighted sum of leaf indicators; binning each feature at the ensemble's own split
 thresholds turns that sum into a matrix product state (tensor-train) with one term
 per leaf. The conversion is lossless (checked to floating-point precision against
-XGBoost, Random Forest and CatBoost), nothing is trained from a random start, and the
+XGBoost; Random Forest and CatBoost are checked in the private repository), nothing is trained from a random start, and the
 decision boundary a risk team has already validated is preserved exactly. The
 tensor-train then serves as an exact explainer of the ensemble's decisions, as a fast
 scorer where a compact model is enough, and as a teacher for a small quantum circuit.
@@ -61,7 +61,7 @@ reduced 8-feature sample used throughout (60 fraud + 940 legitimate training row
 20 + 380 validation and test rows, fraud enriched to 6 % / 5 % so that small-sample
 metrics are not noise) the 300-tree model has 1,522 leaves and the converted
 tensor-train reproduces its margin to within 1e-5. `tt_merge.svd_compress` then
-canonicalises and truncates each bond (Frobenius-optimal, with the discarded weight
+canonicalises and truncates each bond (optimal bond by bond, with the discarded weight
 reported per bond): bond dimension 4 already recovers XGBoost's accuracy and the
 curve is flat from 8. On a larger, properly powered setting (2,000 training rows,
 2,052 leaves, evaluated on every fraud case of the validation and test splits) the
@@ -231,8 +231,8 @@ than a separately trained surrogate.
 - **Scale.** Every result uses the disclosed 8-feature samples, except the
   attribution-stability comparison, which also uses all 29 features. The one-step
   exact merge's memory grows with the square of the leaf count, so a 300-tree
-  model on all 29 features (7,273 leaves) is out of its reach (on the order of
-  500 GB); the hierarchical merge is validated on the 2,052-leaf model, and
+  model on all 29 features (7,273 leaves) is out of its reach (an estimated
+  550 GB); the hierarchical merge is validated on the 2,052-leaf model, and
   applying it at production size is Phase 2 work. Larger feature counts are
   expected to need larger bond dimensions.
 - **Sampling.** The circuit experiments use a stratified sample with fraud

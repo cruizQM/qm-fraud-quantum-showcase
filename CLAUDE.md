@@ -5,7 +5,7 @@ Public repository backing the Quantum Mads Phase 1 concept proposal for the HSBC
 
 ## Current status and open questions
 - Filled to back every proposal claim (2026-09-09); all experiments rerun after the float32 binning fix, three-seed fine-tuning added (2026-09-10).
-- Honest limits (README): all results use the disclosed 8-feature samples (the attribution-stability comparison also uses all 29); the one-step merge cannot reach a 29-feature production model (~500 GB) and the hierarchical merge is validated on the 2,052-leaf model only; circuit results are local-simulator only, over three seeds; the chain warm start helps on 1 of 3 seeds.
+- Honest limits (README): all results use the disclosed 8-feature samples (the attribution-stability comparison also uses all 29); the one-step merge cannot reach a 29-feature production model (~550 GB) and the hierarchical merge is validated on the 2,052-leaf model only; circuit results are local-simulator only, over three seeds; the chain warm start helps on 1 of 3 seeds.
 
 ## How to run
 ```bash
@@ -21,7 +21,7 @@ uv run python scripts/make_figures.py
 Each script writes a JSON table to `results/tables/`; committed tables regenerate figures without rerunning.
 
 ## Key findings
-- Lossless conversion (checked against XGBoost, RF, CatBoost); bond 4 matches XGBoost (0.913 vs 0.914 AUPRC), flat from 8.
+- Lossless conversion (checked against XGBoost here; RF and CatBoost in the private repo); bond 4 matches XGBoost (0.913 vs 0.914 AUPRC), flat from 8.
 - Compressed TT within 0.004 AUPRC of XGBoost before training; fine-tuning adds up to +0.004, never lowers it.
 - Latency (one core, compiled on both sides, different rows per repeat): 8-feature model 4.3-8.8x faster than the faster XGBoost path at every batch size 1-10,000 (5 seeds).
 - Hierarchical merge: identical AUPRC to the one-step merge on the 2,052-leaf model with 28x less core memory.

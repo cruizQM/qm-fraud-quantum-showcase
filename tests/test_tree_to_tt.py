@@ -107,8 +107,7 @@ def test_missing_feature_marginalization_matches_brute_force_against_xgboost_its
     ground truth: not just self-consistency within the converted
     tensor-train, but a brute-force average of XGBOOST'S OWN
     predictions (booster.predict, not the TT) over every training row's
-    value for the missing site -- the same discipline
-    test_missing_features.py uses for the poly-embedded classifier."""
+    value for the missing site."""
     booster, feature_names, rng = _fit_small_xgb(seed=3, n_features=4, n_estimators=6, max_depth=3)
     cores, info = xgboost_to_tensor_train(booster, feature_names, base_score=0.5)
 
