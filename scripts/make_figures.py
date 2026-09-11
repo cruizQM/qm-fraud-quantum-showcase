@@ -1,8 +1,10 @@
 """Regenerates the results figure from the committed JSON tables, without
-re-running any experiment: (a) compression curve from
-results/tables/distillation_compression.json, (b) compiled latency from
-results/tables/latency_compiled.json, (c) chain and tree circuits over three seeds from
-results/tables/circuit_warmstart_seed{0,1,2}.json.
+re-running any experiment. Its four panels cover every plot the proposal draws
+(panels are titled by content, not lettered, so they match any layout of it):
+compression curve (results/tables/distillation_compression.json), compiled latency
+(results/tables/latency_compiled.json), chain and tree circuits over three seeds
+(results/tables/circuit_warmstart_seed{0,1,2}.json), and the run-to-run repeatability
+of explanations (results/tables/attribution_{benchmark,full_scale}.json).
 
 Usage:
     uv run python scripts/make_figures.py
@@ -30,7 +32,8 @@ def load(name: str) -> dict | None:
 def main() -> None:
     OUT.mkdir(exist_ok=True)
     plt.rcParams.update({"font.size": 8, "axes.spines.top": False, "axes.spines.right": False})
-    fig, axes = plt.subplots(1, 3, figsize=(9.6, 3.0), constrained_layout=True)
+    fig, axes = plt.subplots(2, 2, figsize=(8.0, 6.0), constrained_layout=True)
+    axes = axes.ravel()
 
     comp = load("distillation_compression.json")
     ax = axes[0]
@@ -41,7 +44,7 @@ def main() -> None:
         ax.plot(caps, auprc, "o-", color="#2ca02c", ms=4, label="Compressed tensor-train")
         ax.set_xscale("log", base=2); ax.set_xticks(caps); ax.set_xticklabels([str(c) for c in caps])
         lo = min(auprc + [comp["xgboost_test"]["auprc"]]); ax.set_ylim(lo - 0.006, lo + 0.014)
-    ax.set_xlabel("Bond dimension"); ax.set_ylabel("Test AUPRC"); ax.set_title("(a) Compression curve")
+    ax.set_xlabel("Bond dimension"); ax.set_ylabel("Test AUPRC"); ax.set_title("Compression curve")
     ax.legend(frameon=False, fontsize=7, loc="lower right")
 
     lat = load("latency_compiled.json")
@@ -56,7 +59,7 @@ def main() -> None:
             ax.errorbar(batch, m, yerr=s, fmt=marker + "-", color=color, ms=4, capsize=2, label=label)
         ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlabel("Batch size"); ax.set_ylabel("Inference time (ms)")
-    ax.set_title(f"(b) Latency, compiled ({lat['n_seeds'] if lat else '?'} seeds)"); ax.legend(frameon=False, fontsize=7)
+    ax.set_title(f"Latency, compiled ({lat['n_seeds'] if lat else '?'} seeds)"); ax.legend(frameon=False, fontsize=7)
 
     runs = [r for r in (load(f"circuit_warmstart_seed{i}.json") for i in range(3)) if r]
     ax = axes[2]
@@ -72,8 +75,30 @@ def main() -> None:
         for b, m, sd in zip(bars, means, sds):
             ax.text(b.get_x() + b.get_width() / 2, m + sd + 0.004, f"{m:.3f}", ha="center", fontsize=6)
         ax.set_ylim(0.70, 0.97)
-    ax.set_ylabel("Test AUPRC"); ax.set_title(f"(c) 8-qubit circuits ({len(runs)} seeds)")
+    ax.set_ylabel("Test AUPRC"); ax.set_title(f"8-qubit circuits ({len(runs)} seeds)")
     ax.tick_params(axis="x", labelsize=6.5)
+
+    # deterministic explainers disagree with themselves by exactly 0%; KernelSHAP's value is the measured
+    # relative difference between two runs with the same sampling budget
+    bench, full = load("attribution_benchmark.json"), load("attribution_full_scale.json")
+    ax = axes[3]
+    if bench and full:
+        full = full["all_features"]
+        def spread(entry):
+            return 0.0 if entry["deterministic"] else 100 * entry["run_to_run_relative_instability"]
+        methods = [("Tensor-train", "#2ca02c", [bench["tensor_train"], full["tensor_train"]]),
+                   ("TreeSHAP", "#1f77b4", [bench["xgboost_treeshap"], full["xgboost_treeshap"]]),
+                   ("KernelSHAP", "#ff7f0e", [bench["mlp_kernelshap"], full["mlp_kernelshap"]])]
+        x = np.arange(2); w = 0.26
+        for i, (name, color, entries) in enumerate(methods):
+            vals = [spread(e) for e in entries]
+            xs = x + (i - 1) * w
+            ax.bar(xs, vals, w, color=color, label=name)
+            for xi, v in zip(xs, vals):
+                ax.text(xi, v + 1.2, f"{v:.0f}%", ha="center", fontsize=6)
+        ax.set_xticks(x); ax.set_xticklabels(["8 features", "29 features"]); ax.set_ylim(0, 56)
+        ax.legend(frameon=False, fontsize=7, loc="upper left")
+    ax.set_ylabel("Run-to-run disagreement (%)"); ax.set_title("Explanation repeatability (20 transactions)")
 
     fig.savefig(OUT / "results.png", dpi=200)
     print("wrote", OUT / "results.png")

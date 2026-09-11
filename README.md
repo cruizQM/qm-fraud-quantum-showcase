@@ -41,7 +41,7 @@ Every number in the proposal is stored in a committed JSON table under
 ```bash
 uv sync
 uv run pytest tests/                    # 27 exactness and mechanism tests, about 4 minutes
-uv run python scripts/make_figures.py   # redraws the panels of Figure 2 from the committed tables
+uv run python scripts/make_figures.py   # redraws every result plot in the proposal from the committed tables
 ```
 
 Re-running an experiment needs the ULB dataset (see [Reproducing](#reproducing)).
@@ -54,9 +54,9 @@ tests behind both, and [docs/MATH.md](docs/MATH.md) the full derivations.
 |---|---|---|
 | Figure 2(a); Section 2 and Appendix 1, compression (bond 4 matches XGBoost; leaf counts, intervals) | `01_distillation_compression.py` | `distillation_compression.json` |
 | Figure 2(b) and Table A1, inference speed | `12_compiled_latency.py` | `latency_compiled.json` |
-| Figure 2(c), Table A4; Sections 1–2 and Appendix 1, circuits | `13_circuit_warmstart_topologies.py` | `circuit_warmstart_seed{0,1,2}.json` |
+| Circuits: tensor-network copy vs training from scratch (Sections 1–2 and Appendix 1, with the circuit panel of Figure 2 and the circuit table) | `13_circuit_warmstart_topologies.py` | `circuit_warmstart_seed{0,1,2}.json` |
 | Section 2 and Appendix 1, warm start and fine-tuning | `10_tt_finetune.py` | `tt_finetune_lr0.0002_steps1500_seed{0,1,2}.json` |
-| Section 2 and Table A2, attribution and KernelSHAP (6% / 47%) | `03_attribution_benchmark.py`, `09_attribution_full_scale.py` | `attribution_benchmark.json`, `attribution_full_scale.json` |
+| Section 2 and Table A2, attribution and KernelSHAP (6% / 47%), and the explanation-repeatability panel of Figure 2 | `03_attribution_benchmark.py`, `09_attribution_full_scale.py` | `attribution_benchmark.json`, `attribution_full_scale.json` |
 | Section 2 and Table A2, missing fields (+0.03 to +0.16 AUPRC) | `04_missing_fields.py` | `missing_fields.json` |
 | Section 4 and Appendix 1, frauds caught at a fixed 98-alert budget; Section 2, fixed threshold | `15_missing_fields_operational.py` | `missing_fields_operational.json` |
 | Every bootstrap interval (Appendix 1, Table A2) | `14_bootstrap_intervals.py` | `bootstrap_intervals.json` |
