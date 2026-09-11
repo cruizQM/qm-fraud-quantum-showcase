@@ -6,7 +6,7 @@ LIME treats the model it explains as a black box: it perturbs the input
 randomly around one transaction, observes the (unknown) function's
 response, and fits a local linear surrogate by regression -- a noisy
 approximation of local behavior (the same category of weakness the
-KernelSHAP comparison in scripts/42 already measured directly: 63%
+KernelSHAP comparison in scripts/03 and scripts/09 measures directly:
 run-to-run instability at a fixed sampling budget).
 
 The exact tensor-train doesn't need to approximate this. Because it is
@@ -19,9 +19,9 @@ nothing to estimate. This module computes, for one transaction and one
 feature, the exact logit change from moving that feature's value into
 its immediate left or right neighboring bin, holding every other
 feature fixed -- one masked forward pass per direction per feature,
-reusing embed_exact_bins unchanged (the same discipline as
-missing_features.py's masking, just substituting a NEIGHBORING one-hot
-bin instead of the mean reference embedding).
+reusing embed_exact_bins unchanged (the same masking as the missing-field
+marginalisation, substituting a NEIGHBORING one-hot bin instead of the
+mean reference embedding; docs/MATH.md, section 9).
 """
 
 from __future__ import annotations

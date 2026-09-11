@@ -14,21 +14,17 @@ ever makes lands exactly on a bin boundary), each single-feature
 indicator is a 0/1 vector over that feature's bins, and one leaf's
 contribution becomes exactly a bond-dimension-1 tensor-train term --
 sites the leaf never splits on get an all-ones vector (unconstrained =
-matches every bin), the same "unconstrained site" construction
-missing_features.py already uses for exact marginalization.
+matches every bin).
 
 Summing every leaf's rank-1 term with its own weight (its leaf value)
-is exactly tt_merge.py's merge_mps_sum -- reused directly, unchanged,
-with "member" reinterpreted as "one leaf" instead of "one boosted
-round." No new merge mechanism was needed for this to work.
+is exactly tt_merge.py's merge_mps_sum, with each "member" being one
+leaf.
 
-This buys a tensor-train that reproduces an ALREADY-TRAINED, already-
-good XGBoost model's decision boundary exactly, without any gradient
-descent -- sidestepping the multiplicative-chain optimization
-difficulty this whole session has repeatedly found for the gradient-
-trained classifier, at the cost of a large pre-compression bond
-dimension (roughly the ensemble's total leaf count), which
-tt_merge.py's svd_compress can then reduce.
+The result reproduces an already-trained XGBoost model's decision
+function exactly, with no gradient descent, at the cost of a large
+bond dimension (the ensemble's total leaf count), which
+tt_merge.svd_compress then reduces. The mathematics is written out in
+docs/MATH.md (sections 1-3).
 """
 
 from __future__ import annotations
@@ -170,13 +166,12 @@ def predict_logit_from_tt(cores: list[torch.Tensor], info: dict, X: np.ndarray) 
 
 def reference_embedding_from_training_bins(X_train: np.ndarray, info: dict) -> np.ndarray:
     """(n_sites, max_bins): the mean one-hot bin vector per site over
-    the training set -- the same "reference distribution" construction
-    missing_features.py uses for the poly-embedded classifier, just
-    over the exact-threshold binned embedding instead. Retrofits exact
-    missing-feature marginalization onto XGBoost's OWN decision
-    function -- a capability XGBoost's native heuristic (a learned
-    default split direction, not an expectation under any distribution)
-    does not have, without retraining XGBoost at all."""
+    the training set, i.e. the empirical training distribution of each
+    feature's bin. Contracting with it in place of a missing feature's
+    embedding gives an exact expectation of XGBoost's OWN decision
+    function over that feature -- something XGBoost's native handling
+    (a learned default split direction, not an expectation under any
+    distribution) does not provide, and without retraining XGBoost."""
     embedded = embed_exact_bins(X_train, info["feature_names"], info["bin_edges"], info["max_bins"]).numpy()
     return embedded.mean(axis=0)
 
@@ -185,11 +180,11 @@ def predict_logit_with_missing_bins(
     cores: list[torch.Tensor], X: np.ndarray, missing_mask: np.ndarray,
     reference_embedding: np.ndarray, info: dict,
 ) -> np.ndarray:
-    """Same exact-linearity construction as
-    missing_features.predict_logit_with_missing, adapted for the
-    exact-threshold binned embedding (that function hardcodes the poly
-    embedding, so this is a small, direct variant rather than a
-    modification of shared, already-tested code)."""
+    """Logit with every masked site's one-hot embedding replaced by the
+    reference (training-marginal) embedding. By linearity in each site,
+    this is the exact expectation of the model over the missing fields,
+    each drawn independently from its training marginal, in one
+    contraction however many fields are masked (docs/MATH.md, section 7)."""
     n = len(cores)
     observed = embed_exact_bins(X, info["feature_names"], info["bin_edges"], info["max_bins"]).numpy()
     embedded = observed.copy()

@@ -30,6 +30,36 @@ trained tree ensemble ──exact──▶ tensor-train ──SVD──▶ compr
                                     (tree circuit copied from it: 0.881 ± 0.018, 3 seeds)
 ```
 
+## Checking the proposal's results
+
+Every number in the proposal is stored in a committed JSON table under
+`results/tables/`, produced by one script. The mathematics is written out in
+[docs/MATH.md](docs/MATH.md).
+
+**A 5-minute check (no dataset needed):**
+
+```bash
+uv sync
+uv run pytest tests/                    # 27 exactness and mechanism tests, about 4 minutes
+uv run python scripts/make_figures.py   # redraws the panels of Figure 2 from the committed tables
+```
+
+Re-running an experiment needs the ULB dataset (see [Reproducing](#reproducing)).
+
+| In the proposal | Script | Result table |
+|---|---|---|
+| Figure 2(a); Section 2, compression ("bond 4 matches XGBoost") | `01_distillation_compression.py` | `distillation_compression.json` |
+| Figure 2(b) and Table A1, latency | `12_compiled_latency.py` | `latency_compiled.json` |
+| Figure 2(c); Sections 1–2, circuit results | `13_circuit_warmstart_topologies.py` | `circuit_warmstart_seed{0,1,2}.json` |
+| Section 2, warm start and fine-tuning | `10_tt_finetune.py` | `tt_finetune_lr0.0002_steps1500_seed{0,1,2}.json` |
+| Section 2 and Table A2, attribution and KernelSHAP (6% / 47%) | `03_attribution_benchmark.py`, `09_attribution_full_scale.py` | `attribution_benchmark.json`, `attribution_full_scale.json` |
+| Section 2 and Table A2, missing fields (+0.03 to +0.16 AUPRC) | `04_missing_fields.py` | `missing_fields.json` |
+| Section 4, frauds caught at a fixed 98-alert budget; Section 2, fixed threshold | `15_missing_fields_operational.py` | `missing_fields_operational.json` |
+| Every bootstrap interval (Section 2, Table A2) | `14_bootstrap_intervals.py` | `bootstrap_intervals.json` |
+| Section 2, boundary sensitivity (2 of 15 flip) | `05_boundary_sensitivity.py` | `boundary_sensitivity.json` |
+| Section 2 and Table A3, entanglement entropy | `06_entropy_calibration.py` | `entropy_calibration.json` |
+| Section 3, hierarchical conversion (15 clusters, 28× smaller cores) | `11_hierarchical_merge.py` | `hierarchical_merge.json` |
+
 ## What is demonstrated
 
 Every claim maps to one script, one committed result table and (where the claim
@@ -161,8 +191,9 @@ exact, sampling-free answers, each as one contraction against a modified embeddi
   (rank agreement with TreeSHAP stays at 0.80–0.82 at both scales). See
   `results/tables/attribution_benchmark.json` and `attribution_full_scale.json`.
 - **Missing fields.** The same substitution is an exact expectation over the
-  reference distribution, in one contraction regardless of how many fields are
-  missing. `04_missing_fields.py` masks features at 10–50 % (five mask seeds) and
+  reference distribution (each missing field drawn from its training marginal,
+  independently of the others), in one contraction regardless of how many fields
+  are missing. `04_missing_fields.py` masks features at 10–50 % (five mask seeds) and
   compares with XGBoost's native default-direction handling on the same masked
   rows: +0.025 / +0.065 / +0.087 / +0.159 AUPRC.
   `15_missing_fields_operational.py` restates this operationally on the same model

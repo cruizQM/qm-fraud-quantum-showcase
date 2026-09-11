@@ -101,25 +101,17 @@ def svd_compress(cores: list[torch.Tensor], max_bond: int) -> tuple[list[torch.T
 
 
 def entropy_per_cut(cores: list[torch.Tensor]) -> list[float]:
-    """Von Neumann (Schmidt-spectrum) entropy at every bond, for the
-    SUPERVISED classifier's weight tensor -- the same canonicalization
-    sweep `svd_compress` uses, with no truncation, reading off entropy
-    of the full normalized singular-value spectrum at each cut instead
-    of a discarded-weight fraction.
+    """Von Neumann (Schmidt-spectrum) entropy at every bond -- the same
+    canonicalization sweep `svd_compress` uses, with no truncation,
+    reading off the entropy of the full normalized singular-value
+    spectrum at each cut instead of a discarded-weight fraction.
 
     This is a purely linear-algebraic quantity (entropy of a Schmidt
-    decomposition), well-defined for ANY tensor regardless of whether
-    the whole network is a normalized quantum state -- unlike
-    tensorkrowch's own `MPS.entropy()` (used in explain.py for the
-    unsupervised Born machine, which IS a normalized state), this
-    applies directly to the discriminative Exponential Machine's raw
-    weight tensor. High entropy at a cut means the trained model routes
-    substantial correlation across that specific bond; entropy near 0
-    means that bond carries essentially no information regardless of
-    how large the bond dimension there is. This is the continuous,
-    model-native analogue of cutwidth.py's prediction (computed from a
-    thresholded PROXY interaction graph) -- measured directly on the
-    ACTUAL trained weights instead."""
+    decomposition), well defined for any tensor, whether or not it is a
+    normalized quantum state. High entropy at a cut means the model
+    routes substantial information across that bond; entropy near 0
+    means the bond carries essentially none, however large its bond
+    dimension (docs/MATH.md, section 10)."""
     c = _to_three_index([x.double() for x in cores])
     n = len(c)
 

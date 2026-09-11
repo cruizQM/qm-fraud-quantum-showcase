@@ -1,12 +1,11 @@
 """Pure-numpy forward passes for the distilled chain and tree tensor-
-trains -- built specifically to give the tensor-train side a fair shot
-at the latency question scripts/50 answered honestly but pessimistically
-for the compressed model: that implementation round-tripped through
-PyTorch (numpy -> torch tensor -> einsum -> numpy) for a contraction
-with trivial FLOP count at bond_dim=8, where fixed per-call dispatch
-overhead plausibly dominates the actual work. This module removes that
-round trip entirely -- one-hot binning and every contraction step done
-in plain numpy, no torch anywhere on this path.
+trains, for the latency benchmarks. A PyTorch path (numpy -> torch
+tensor -> einsum -> numpy) is dominated by fixed per-call dispatch
+overhead at bond_dim=8, where the contraction itself is tiny, so here
+one-hot binning and every contraction step are done in plain numpy.
+Because the embedding is one-hot, contracting a core is a gather of one
+slice (docs/MATH.md, section 4). The compiled Numba kernel used for the
+reported latency is in scripts/12_compiled_latency.py.
 """
 
 from __future__ import annotations

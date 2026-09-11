@@ -1,8 +1,7 @@
-"""A variational quantum circuit ansatz derived directly from this
-session's validated TREE tensor network topology, run via Amazon
-Braket -- the challenge statement's central, explicit ask
-("Participants are asked to use Amazon Braket") that this repo had not
-engaged with at all before this module.
+"""Variational quantum circuits with a TREE (and, for comparison, a
+CHAIN) topology, run via Amazon Braket, as the challenge statement asks
+("Participants are asked to use Amazon Braket"). The mathematics is in
+docs/MATH.md, section 11.
 
 The mapping from the classical tree tensor network to a quantum
 circuit is a known construction (hierarchical/tree quantum classifiers,
@@ -15,9 +14,8 @@ leaf-merge -> internal-merge -> root structure -- and measure a single
 final qubit's Z-expectation as the fraud score.
 
 `chain_ansatz` is the matched CHAIN-topology circuit (entangling blocks
-applied sequentially along a line, mirroring the classical MPS chain
-this session spent most of its time on) built for a direct, objective
-comparison: the challenge explicitly names "qubit count and circuit
+applied sequentially along a line, mirroring the classical MPS chain)
+built for a direct, objective comparison: the challenge explicitly names "qubit count and circuit
 depth" as a good-to-have metric for assessing near-term hardware
 feasibility, and depth is where the two topologies provably differ --
 O(log n_qubits) for the tree vs. O(n_qubits) for the chain, for the
@@ -171,14 +169,13 @@ def pretrain_circuit_to_match_teacher(
     """Fits the circuit's own logit output to match a teacher model's
     logit (here, the compressed XGBoost-derived tensor-train) via plain
     MSE regression -- standard knowledge distillation, done BEFORE any
-    real-label training. Directly addresses the motivation this module
-    exists for: a circuit trained from a random init can get stuck in a
-    poor optimum (the chain ansatz reached only 0.813 AUPRC from
-    scratch, scripts/47) -- starting from a point that already
-    approximates an excellent classical decision boundary sidesteps
-    that hard optimization problem, the same way the classical warm
-    start (tree_to_tt.py, scripts/49) did for the gradient-trained
-    tensor network. Mutates clf's parameters in place (matches
+    real-label training. A circuit trained from a random init can get
+    stuck in a poor optimum (the chain ansatz reached only 0.813 AUPRC
+    from scratch on seed 0, scripts/07); starting from a point that
+    already approximates a good classical decision boundary is the
+    same idea as the classical warm start of scripts/10. How well the
+    circuit copies the teacher depends on its topology (scripts/13).
+    Mutates clf's parameters in place (matches
     train_circuit_classifier's own convention of training the passed-in
     classifier directly)."""
     optimizer = torch.optim.Adam(clf.parameters(), lr=lr)

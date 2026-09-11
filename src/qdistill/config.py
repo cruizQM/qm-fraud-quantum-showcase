@@ -1,6 +1,5 @@
-"""Minimal configuration for the showcase pipeline -- trimmed from the
-full research repo's config.py to just what circuit_distillation_demo.py
-needs."""
+"""Minimal configuration for the showcase pipeline: data and result paths
+and the fraud label column shared by every script."""
 
 from __future__ import annotations
 

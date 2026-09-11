@@ -17,7 +17,7 @@ Compares three points on the SAME reduced 8-feature sample:
      XGBoost teacher, then fine-tuned
 
 Usage:
-    uv run python scripts/circuit_distillation_demo.py
+    uv run python scripts/07_circuit_distillation.py
 """
 
 from __future__ import annotations

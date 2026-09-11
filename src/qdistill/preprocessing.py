@@ -1,23 +1,17 @@
-"""Shared feature preprocessing for the supervised TT interaction
-classifier -- factored out once it became clear this choice matters a
-lot, not just a fixed detail.
+"""Shared feature preprocessing for the models that need bounded inputs
+(the circuits' angle encoding and the MLP competitor). The tree ensembles
+and the tensor-trains distilled from them use raw feature values.
 
 Two options:
-- "quantile" (the original default throughout this repo):
-  QuantileTransformer(output_distribution="uniform") mapped to [-1, 1].
-  Forces every feature to an exactly uniform marginal BY RANK -- safe
-  (tightly bounded, avoids the numerical blowup unbounded standardized
-  features caused earlier in this repo, |z| up to ~102), but discards
-  HOW EXTREME a value is, keeping only its rank position.
-- "robust_rescaled" (found while diagnosing a training failure in
-  scripts/30): RobustScaler (median-centered, IQR-scaled -- preserves
-  each feature's original skew) divided by RESCALE_DIVISOR and clipped
-  to [-1, 1] -- bounded to the same safe magnitude as "quantile", but
-  keeps relative extremity information "quantile" throws away. A 300-
-  step diagnostic reached val AUPRC 0.874 under this preprocessing,
-  vs. 0.783-0.789 for "quantile" at the same architecture/hyperparameters
-  -- large enough to warrant re-running this repo's key experiments
-  under it rather than treating "quantile" as settled.
+- "quantile": QuantileTransformer(output_distribution="uniform") mapped
+  to [-1, 1]. Forces every feature to a uniform marginal by rank --
+  tightly bounded, but discards how extreme a value is.
+- "robust_rescaled" (used by every script in this repository):
+  RobustScaler (median-centered, IQR-scaled -- preserves each feature's
+  skew) divided by RESCALE_DIVISOR and clipped to [-1, 1] -- bounded to
+  the same magnitude, but keeps relative extremity. The circuit scripts
+  multiply the result by pi to obtain rotation angles (docs/MATH.md,
+  section 11).
 
 Both are fit ONLY on the training split.
 """
