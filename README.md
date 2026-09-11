@@ -62,7 +62,7 @@ tests behind both, and [docs/MATH.md](docs/MATH.md) the full derivations.
 | Every bootstrap interval (Appendix 1, Table A2) | `14_bootstrap_intervals.py` | `bootstrap_intervals.json` |
 | Section 2 and Appendix 1, boundary sensitivity (2 of 15 flip) | `05_boundary_sensitivity.py` | `boundary_sensitivity.json` |
 | Section 2 and Table A3, entanglement entropy | `06_entropy_calibration.py` | `entropy_calibration.json` |
-| Section 3 and Appendix 1, staged conversion (15 clusters, 28× smaller tensors) | `11_hierarchical_merge.py` | `hierarchical_merge.json` |
+| Section 3, staged conversion (15 groups, 28× smaller tensors; 20 trees per cluster, cap 64) | `11_hierarchical_merge.py` | `hierarchical_merge.json` |
 
 ## What is demonstrated
 
