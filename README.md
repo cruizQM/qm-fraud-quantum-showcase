@@ -46,19 +46,23 @@ uv run python scripts/make_figures.py   # redraws the panels of Figure 2 from th
 
 Re-running an experiment needs the ULB dataset (see [Reproducing](#reproducing)).
 
+The proposal's body states each result in plain language; its Appendix 1 gives the
+technical detail, paragraph by paragraph; this repository holds the code, tables and
+tests behind both, and [docs/MATH.md](docs/MATH.md) the full derivations.
+
 | In the proposal | Script | Result table |
 |---|---|---|
-| Figure 2(a); Section 2, compression ("bond 4 matches XGBoost") | `01_distillation_compression.py` | `distillation_compression.json` |
-| Figure 2(b) and Table A1, latency | `12_compiled_latency.py` | `latency_compiled.json` |
-| Figure 2(c); Sections 1–2, circuit results | `13_circuit_warmstart_topologies.py` | `circuit_warmstart_seed{0,1,2}.json` |
-| Section 2, warm start and fine-tuning | `10_tt_finetune.py` | `tt_finetune_lr0.0002_steps1500_seed{0,1,2}.json` |
+| Figure 2(a); Section 2 and Appendix 1, compression (bond 4 matches XGBoost; leaf counts, intervals) | `01_distillation_compression.py` | `distillation_compression.json` |
+| Figure 2(b) and Table A1, inference speed | `12_compiled_latency.py` | `latency_compiled.json` |
+| Figure 2(c), Table A4; Sections 1–2 and Appendix 1, circuits | `13_circuit_warmstart_topologies.py` | `circuit_warmstart_seed{0,1,2}.json` |
+| Section 2 and Appendix 1, warm start and fine-tuning | `10_tt_finetune.py` | `tt_finetune_lr0.0002_steps1500_seed{0,1,2}.json` |
 | Section 2 and Table A2, attribution and KernelSHAP (6% / 47%) | `03_attribution_benchmark.py`, `09_attribution_full_scale.py` | `attribution_benchmark.json`, `attribution_full_scale.json` |
 | Section 2 and Table A2, missing fields (+0.03 to +0.16 AUPRC) | `04_missing_fields.py` | `missing_fields.json` |
-| Section 4, frauds caught at a fixed 98-alert budget; Section 2, fixed threshold | `15_missing_fields_operational.py` | `missing_fields_operational.json` |
-| Every bootstrap interval (Section 2, Table A2) | `14_bootstrap_intervals.py` | `bootstrap_intervals.json` |
-| Section 2, boundary sensitivity (2 of 15 flip) | `05_boundary_sensitivity.py` | `boundary_sensitivity.json` |
+| Section 4 and Appendix 1, frauds caught at a fixed 98-alert budget; Section 2, fixed threshold | `15_missing_fields_operational.py` | `missing_fields_operational.json` |
+| Every bootstrap interval (Appendix 1, Table A2) | `14_bootstrap_intervals.py` | `bootstrap_intervals.json` |
+| Section 2 and Appendix 1, boundary sensitivity (2 of 15 flip) | `05_boundary_sensitivity.py` | `boundary_sensitivity.json` |
 | Section 2 and Table A3, entanglement entropy | `06_entropy_calibration.py` | `entropy_calibration.json` |
-| Section 3, hierarchical conversion (15 clusters, 28× smaller cores) | `11_hierarchical_merge.py` | `hierarchical_merge.json` |
+| Section 3 and Appendix 1, staged conversion (15 clusters, 28× smaller tensors) | `11_hierarchical_merge.py` | `hierarchical_merge.json` |
 
 ## What is demonstrated
 
