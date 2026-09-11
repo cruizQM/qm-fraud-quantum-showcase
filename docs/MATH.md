@@ -12,7 +12,7 @@ them: $e_{s,1} < \dots < e_{s,m_s}$. These edges cut the real line into
 $p_s = m_s + 1$ bins, and the embedding of a value is the one-hot vector of its bin:
 
 $$
-\phi_s(x_s) \in \{0,1\}^{p_s}, \qquad \phi_s(x_s)_b = 1 \iff e_{s,b-1} \le x_s < e_{s,b},
+\phi_s(x_s) \in \lbrace 0,1 \rbrace^{p_s}, \qquad \phi_s(x_s)_b = 1 \iff e_{s,b-1} \le x_s < e_{s,b},
 $$
 
 with $e_{s,0} = -\infty$ and $e_{s,p_s} = +\infty$. Comparisons are made in float32,
@@ -29,9 +29,9 @@ a union of whole bins, and its indicator is a fixed 0/1 mask applied to the
 embedding:
 
 $$
-\mathbb{1}[x_s \in [a_{\ell s}, b_{\ell s})] = m_{\ell s} \cdot \phi_s(x_s),
+\mathbf{1}[x_s \in [a_{\ell s}, b_{\ell s})] = m_{\ell s} \cdot \phi_s(x_s),
 \qquad
-\mathbb{1}[x \in R_\ell] = \prod_{s=1}^{n} m_{\ell s} \cdot \phi_s(x_s).
+\mathbf{1}[x \in R_\ell] = \prod_{s=1}^{n} m_{\ell s} \cdot \phi_s(x_s).
 $$
 
 A product over sites of vector-times-embedding terms is a tensor-train of bond
@@ -40,7 +40,7 @@ dimension 1. *Code:* `tree_to_tt.leaf_to_cores`.
 ## 3. An ensemble is a tensor-train of bond dimension $L$
 
 XGBoost's raw margin is a sum over all leaves of all trees,
-$f(x) = \beta_0 + \sum_{\ell=1}^{L} v_\ell\, \mathbb{1}[x \in R_\ell]$, with
+$f(x) = \beta_0 + \sum_{\ell=1}^{L} v_\ell\, \mathbf{1}[x \in R_\ell]$, with
 $\beta_0 = \operatorname{logit}(\text{base score})$ and $v_\ell$ the leaf values. The
 sum of rank-1 terms is one tensor-train with block-diagonal (direct-sum) cores:
 
@@ -140,7 +140,7 @@ The attribution of feature $j$ to transaction $x$ is the exact change in logit w
 that feature alone is marginalised as in section 7:
 
 $$
-a_j(x) = f(x) - f_{\{j\}}(x).
+a_j(x) = f(x) - f_{\lbrace j \rbrace}(x).
 $$
 
 It costs one extra contraction per feature, batched over all transactions, and is
@@ -155,10 +155,10 @@ $f$ is constant on every cell of the bin grid. Moving feature $s$ from its bin
 $b_s$ into a neighbouring bin $b_s \pm 1$ changes the logit by
 
 $$
-\Delta^{\pm}_s(x) = f\big(x;\ \phi_s \to e_{b_s \pm 1}\big) - f(x),
+\Delta^{\pm}_s(x) = f\big(x;\ \phi_s \to u_{b_s \pm 1}\big) - f(x),
 $$
 
-one contraction per feature and direction, where $e_b$ is the one-hot vector of bin
+one contraction per feature and direction, where $u_b$ is the one-hot vector of bin
 $b$. With decision threshold $\tau$ on the logit, a single-bin move flips the
 decision exactly when it carries $f$ across $\tau$. The raw distance from $x_s$ to
 the corresponding bin edge is reported alongside.
