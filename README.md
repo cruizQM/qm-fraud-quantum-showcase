@@ -302,6 +302,7 @@ uv run python scripts/11_hierarchical_merge.py         # ~6 min, ~6 GB (runs the
 uv run python scripts/12_compiled_latency.py           # ~6 min, 5 seeds
 uv run python scripts/13_circuit_warmstart_topologies.py --seed 0   # ~1.7 h per seed (1, 2 for repeats); local Braket simulator
 uv run python scripts/14_bootstrap_intervals.py        # ~4 min, ~7 GB (rebuilds the models of scripts 01 and 04)
+uv run python scripts/15_missing_fields_operational.py # ~1 min, ~7 GB (rebuilds script 04's model; run 04 first)
 uv run python scripts/make_figures.py
 ```
 
